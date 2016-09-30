@@ -1,5 +1,5 @@
 The CD Extender utility helps in the navigation of very large directory trees by figuring out the target directory based on minimal input from the user (ideally just the last part of the pathname). 
-In itself `cdext` is just a textual utility that searches for a pattern in text files, very much like `grep`. A wrapping shell function is supplied to do the actual moving around, as in this example
+In itself `cdext` is just a textual utility that searches for a pattern in text files, very much like `grep`. A wrapping shell function is supplied to do the actual moving around, similar to the following
 
 ```
 CDX_FILE=${HOME}/.cdx_db
@@ -9,7 +9,7 @@ function cdx ()
 }
 ```
 
-This repository contains the sources of cdext that can be compiled along with a bash file that should be source-ed (`cdx.d`) and an example shell script (`cdx_update.sh`) that can be used to create a database.
+This repository contains the sources of cdext that can be compiled along with a bash file that should be source-ed (`cdx.d`) and an example shell script (`cdx_update_example.sh`) that can be used to create a database.
 
 # Introduction
 Direcroty trees can be very large. For example, my current home is the root for over a million directories when including soft links (there are probably loops so this is just an estimate); discovering this tree took over 15 hours.
