@@ -27,9 +27,11 @@ Assuming a db file was created with `find / -print | sort -u > ${CDX_FILE}` the 
 /projC/doc
 > cdx A//bin #  As a shortcut "//" can be used in the pattern instead of "*"
 /projA/dev/bin
-> cdx src  # When multiple folders match the pattern the one which has the longest prefix match with the current folder is chosen
+> cdx src  # When multiple folders match the pattern the one which has the 
+           # longest prefix match with the current folder is chosen
 /projA/dev/src
-> cdx prod// # If the patttern ends with "//" then of all matches with the longest prefix match we pick the one with the longest suffix match.
+> cdx prod// # If the patttern ends with "//" then of all matches with the
+             #longest prefix match we pick the one with the longest suffix match.
 /projA/proc/src
 ```
 
