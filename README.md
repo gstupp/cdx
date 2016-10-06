@@ -1,4 +1,4 @@
-The CD Extender utility and associated shell scripts help in the navigation of very large directory trees.
+The `cdext` utility and associated shell script `cdx` help in the navigation of very large directory trees. Ideally, it allows for navigation with the miminal amount of input from the user.
 
 # Examples
 Consider as an example the following directory tree 
@@ -20,13 +20,13 @@ Consider as an example the following directory tree
     `-- latex
 ```
 
-Assuming that `cdx.d` was sourced and that `find / -print | sort -u > ${CDX_FILE}` was executed the following can be used to traverse the tree
+Assuming a db file was created with `find / -print | sort -u > ${CDX_FILE}` the following can be used to traverse the tree
 
 ```
 > cdx doc     # Change to the folder that matches *doc* (more precisly the extended glob *doc!(*/*)?(/))
 /projC/doc
 > cdx A//bin #  As a shortcut "//" can be used in the pattern instead of "*"
-/projA/deb/bin
+/projA/dev/bin
 > cdx src  # When multiple folders match the pattern the one which has the longest prefix match with the current folder is chosen
 /projA/dev/src
 > cdx prod// # If the patttern ends with "//" then of all matches with the longest prefix match we pick the one with the longest suffix match.
