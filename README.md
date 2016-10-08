@@ -27,11 +27,11 @@ Assuming a db file was created with `find / -print | sort -u > ${CDX_FILE}` the 
 /projC/doc
 > cdx A//bin #  As a shortcut "//" can be used in the pattern instead of "*"
 /projA/dev/bin
-> cdx src  # When multiple folders match the pattern the one which has the 
-           # longest prefix match with the current folder is chosen
+# When multiple folders match the pattern the one which has the longest prefix match with the current folder is chosen
+> cdx src   
 /projA/dev/src
-> cdx prod// # If the patttern ends with "//" then of all matches with the
-             #longest prefix match we pick the one with the longest suffix match.
+# If the patttern ends with "//" then of all matches with the longest prefix match we pick the one with the longest suffix match.
+> cdx prod// 
 /projA/proc/src
 ```
 
@@ -57,9 +57,8 @@ function cdx ()
 }
 ```
 
-This repository contains the sources of cdext that can be compiled along with a bash file that should be source-ed (`cdx.d`) and an example shell script (`cdx_update_example.sh`) that can be used to create a database.
+This repository contains the sources of cdext that can be compiled along with a bash file that should be source-ed (`cdx.d`) and an example shell script (`cdx_update_example.sh`) that can be used to create a database. 
 
 # Notes
-
-
-
+1. `cdext` matches only directories that appear explicitly. That is, no attmpt is made to deduce partial paths from the input.
+1. The pattern `pattern` is actually changed to the extended glob `*patten!(*/*)?(/)`. For example, `cdx A` will match `/projA` and not `/projA/dev/bin` in the case above.
