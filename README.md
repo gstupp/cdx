@@ -26,10 +26,13 @@ Assuming a db file was created with `find / -print | sort -u > ${CDX_FILE}` the 
 /projC/doc
 > cdx A//bin #  "//" can be used in the pattern instead of "*"
 /projA/dev/bin
-# When multiple folders match the pattern the one which is closest (has the longest prefix match with the current folder) is chosen
+# When multiple folders match the pattern the one which is closest
+# (has the longest prefix match with the current folder) is chosen
 > cdx src   
 /projA/dev/src
-# If the patttern ends with "//" then of all matches with the longest prefix match we choose the one with the longest suffix match. This is useful when it is required to change a directory in the path which is not necessarly the last one.
+# If the patttern ends with "//" then of all matches with the longest
+# prefix match we choose the one with the longest suffix match.
+# This is useful when it is required to change a directory in the path which is not necessarly the last one.
 > cdx prod// 
 /projA/prod/src
 ```
@@ -58,6 +61,7 @@ The `cdext` command accepts as paramters a `pivot` (typically the current direct
 1. The reason `pattern` is  changed to the extended glob `*patten!(*/*)?(/)` instead of just `*pattern*` is so that for example `cdx A` will match `/projA` but not `/projA/dev/bin` in the example above.
 1. `cdext` matches only directories that appear explicitly (have their own entry). No attmpt is made to deduce partial paths from the input.
 1. The order of entries in the database is important.
+
 # Installation
 This repository contains the sources of `cdext` which should be compiled and placed in the `PATH`, along with a bash file (`cdx.d`) that should be sourced, typically from `~/.bashrc`. Also an example shell script (`cdx_update_example.sh`) is supplied that can be used to create and update a database of directories. 
 
