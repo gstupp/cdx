@@ -22,7 +22,9 @@ Consider the following directory tree
 
 Assuming a db file was created with `find / -print | sort -u > ${CDX_FILE}` the following can be used to traverse the tree
 ```
-> cdx doc     # Change to the folder that matches *doc* (more precisly the extended glob *doc!(*/*)?(/))
+> pwd
+> /
+> cdx doc     # chdir to the folder that matches *doc* (more precisly the extended glob *doc!(*/*)?(/))
 /projC/doc
 > cdx A//bin #  "//" can be used in the pattern instead of "*"
 /projA/dev/bin
