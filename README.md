@@ -57,7 +57,7 @@ function cdx ()
 }
 ```
 
-This repository contains the sources of cdext that can be compiled along with a bash file that should be source-ed (`cdx.d`) and an example shell script (`cdx_update_example.sh`) that can be used to create a database. 
+This repository contains the sources of `cdext` along with a bash file (`cdx.d`) that should be sourced, typically from `~/.bashrc`, and an example shell script (`cdx_update_example.sh`) that can be used to create and update a database of directories. 
 
 # Notes
 1. `cdext` matches only directories that appear explicitly. That is, no attmpt is made to deduce partial paths from the input.
