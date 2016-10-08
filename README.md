@@ -1,4 +1,4 @@
-The `cdext` utility and associated shell script `cdx` help in the navigation of very large directory trees. Ideally, it allows for navigation with the miminal amount of input from the user.
+The `cdext` utility and associated shell script `cdx` help in the navigation of very large directory trees. The intent is to allow navigation with the miminal amount of input from the user.
 
 # Examples
 Consider as an example the following directory tree 
