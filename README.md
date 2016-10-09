@@ -1,4 +1,4 @@
-The `cdext` utility and wrapping shell script `cdx` help in the navigation of very large directory trees. The intent is to allow navigation with the miminal amount of input from the user.
+The `cdext` utility and `cdx` shell function help in the navigation of very large directory trees. The intent is to allow navigation with miminal amount of input from the user.
 
 # Examples
 Consider the following directory tree 
@@ -24,17 +24,18 @@ Assuming a db file was created with `find / -print | sort -u > ${CDX_FILE}` the 
 ```
 > pwd
 > /
-> cdx doc     # chdir to the folder that matches *doc* (more precisly the extended glob *doc!(*/*)?(/))
+> cdx doc     # chdir to the folder whose path matches *doc* 
 /projC/doc
-> cdx A//bin #  "//" can be used in the pattern instead of "*"
+> cdx A//bin #  chdir to the folder whose path matches *A*bin*. 
+             #  As a convinence, "//" can be used instead of "*".
 /projA/dev/bin
-# When multiple folders match the pattern the one which is closest
+# When multiple folders match the pattern the one which is logically the nearest
 # (has the longest prefix match with the current folder) is chosen
 > cdx src   
 /projA/dev/src
-# If the patttern ends with "//" then of all matches with the longest
+# As a special case, if the patttern ends with "//" then of all matches with the longest
 # prefix match we choose the one with the longest suffix match.
-# This is useful when it is required to change a directory in the path which is not necessarly the last one.
+# This can be used to change a directory in the path that is not the last one.
 > cdx prod// 
 /projA/prod/src
 ```
@@ -48,7 +49,7 @@ real    915m12.806s
 user    3m56.711s
 sys     14m7.513s
 ```
-The `cdext` utility and `cdx` shell script help in the navigation of directory trees by focusing on a small, predefined, subset of the tree that is the most important and by suppling convineint tools such as globbing and longest prefix match to traverse this subset.  By itself `cdext` is just a textual utility that searches for a pattern in text files, very much like `grep`. The wrapping shell function `cdx` which is similar to the following is supplied to do the actual moving around. This is necessary because a command is executed in a sub-shell which cannot change the current path of the current process.
+The `cdext` utility and `cdx` shell script help in the navigation of directory trees by focusing on a small, predefined, subset of the tree that is usefull and by suppling convineint tools such as globbing and longest prefix match to traverse this subset.  By itself `cdext` is just a textual utility that searches for a pattern in text files, very much like `grep`. The wrapping shell function `cdx` which is similar to the following is supplied to do the actual moving around. This is necessary because a command is executed in a sub-shell which cannot change the current path of the current process.
 
 ```
 CDX_FILE=${HOME}/.cdx_db
