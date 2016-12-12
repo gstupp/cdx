@@ -114,11 +114,10 @@ int main(int argc, char **argv)
 
 /* Length of Longest Prefix match */
 static int lpm (const char *s1, const char *s2)
-{       int count = 0;		
-//	printf("s1=%s, s2=%s\n",s1, s2);
+{       int count = 0;
 	if (s1 == NULL || s2 == NULL)
 		return 0;
-	while ((*s1) && (*s2) && (*(s1++) == *(s2++))) 
+	while ((*s1) && (*s2) && (*(s1++) == *(s2++)))
 		count++;
 	return count;
 }
@@ -170,6 +169,10 @@ static int process_line(const char *l, size_t size, const char *name)
 {
 	static int best_lpm = -1, best_lsm = -1, tmp;
 	int res;
+
+	// The pivot itself is not interesting
+	if (!strcmp(pivot,l))
+		return (0);
 
 	if ((res = fnmatch(glob, l, FNM_EXTMATCH)) == 0) {
 		tmp = lpm(pivot, l);
