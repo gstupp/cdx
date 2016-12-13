@@ -11,7 +11,7 @@
 #include <fnmatch.h>
 
 #define GLOB_PREFIX "*"
-#define GLOB_SUFFIX "!(*/*)?(/)"
+#define GLOB_SUFFIX "!(*/*)?(/)" 
 #define INITIAL_BUF_SIZE 256
 
 char *myname;			/* for error messages */
@@ -34,9 +34,14 @@ static void save_line(const char *l, int size)
 
 static void print_line(void)
 {
-	puts(best_match);
+	if(best_match != NULL)
+		puts(best_match);
 }
 
+static int get_saved_len()
+{
+	return (strlen(best_match));
+}
 
 void process_pattern(const char *pat);
 void process(const char *name, FILE *fp);
@@ -113,7 +118,7 @@ int main(int argc, char **argv)
 }
 
 /* Length of Longest Prefix match */
-static int lpm (const char *s1, const char *s2)
+static int lpm(const char *s1, const char *s2)
 {       int count = 0;
 	if (s1 == NULL || s2 == NULL)
 		return 0;
@@ -123,7 +128,7 @@ static int lpm (const char *s1, const char *s2)
 }
 
 /* Length of Longest Suffix Match */
-static int lsm (const char *s1, const char *s2)
+static int lsm(const char *s1, const char *s2)
 {       int count = 0;
 	if (s1 == NULL || s2 == NULL)
 		return 0;
@@ -132,6 +137,18 @@ static int lsm (const char *s1, const char *s2)
 	const char *e2 = s2 + strlen(s2);
 	while ((e1 != s1) && (e2 != s2) && (*(e1--) == *(e2--)))
 		count++;
+	return count;
+}
+
+/* # of "/" in string */
+static int scnt(const char *s1)
+{       int count = 0;
+	if (s1 == NULL)
+		return 0;
+	while (*s1) {
+		if (*(s1++) == '/')
+			count++;
+	}
 	return count;
 }
 
@@ -167,27 +184,58 @@ void process_pattern(const char *s)
 
 static int process_line(const char *l, size_t size, const char *name)
 {
-	static int best_lpm = -1, best_lsm = -1, tmp;
+	static int best_lpm = -1, best_lsm = -1, best_scnt = -1;
+	static int tmp_lpm = 0, tmp_lsm = 0, tmp_scnt = 0;
 	int res;
 
 	// The pivot itself is not interesting
 	if (!strcmp(pivot,l))
-		return (0);
+		return 0;
 
 	if ((res = fnmatch(glob, l, FNM_EXTMATCH)) == 0) {
-		tmp = lpm(pivot, l);
-		if (tmp > best_lpm) {
-			save_line(l,size);
-			best_lpm = tmp;
-		} else if ((tmp == best_lpm) && LSM) {
-			tmp =  lsm(pivot, l);
-			if (tmp > best_lsm) {
-				save_line(l,size);
-				best_lsm = tmp;
+		if (verbose || list) {
+			if (LSM) { 
+				printf("%s (lpm: %3d lsm: %3d len: %3d): %s\n", name, lpm(pivot, l), lsm(pivot, l), strlen(l), l);
+			} else {
+				printf("%s (lpm: %3d len: %3d lsm: %3d): %s\n", name, lpm(pivot, l), strlen(l), lsm(pivot, l), l);
 			}
 		}
-		if (list && !verbose) fprintf(stderr, "%s: %s\n", name, l);
-		if (verbose) fprintf(stderr, "%s: %s (lpm:%d, lsm:%d)\n", name, l, lpm(pivot, l), lsm(pivot, l));
+
+		tmp_lpm = lpm(pivot, l);
+		tmp_lsm = lsm(pivot, l);
+		tmp_scnt = scnt(l);
+
+		if (tmp_lpm < best_lpm)
+			return 0;
+
+		if (tmp_lpm > best_lpm) {
+			save_line(l,size);
+			best_lpm = tmp_lpm;
+			best_lsm = tmp_lsm;
+			best_scnt = tmp_scnt;
+			return 0;
+		}
+
+		if (LSM) {
+			if(tmp_lsm < best_lsm) {
+				return 0;
+			}
+
+			if (tmp_lsm > best_lsm) {
+				save_line(l,size);
+				best_lpm = tmp_lpm;
+				best_lsm = tmp_lsm;
+				best_scnt = tmp_scnt;
+				return 0;
+			}
+		}
+
+		if(tmp_scnt < best_scnt) {
+			save_line(l,size);
+			best_lpm = tmp_lpm;
+			best_lsm = tmp_lsm;
+			best_scnt = tmp_scnt;
+		}
 	}
 
 	return (res);
