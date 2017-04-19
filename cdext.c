@@ -188,10 +188,6 @@ static int process_line(const char *l, size_t size, const char *name)
 	static int tmp_lpm = 0, tmp_lsm = 0, tmp_scnt = 0;
 	int res;
 
-	// The pivot itself is not interesting
-	if (!strcmp(pivot,l))
-		return 0;
-
 	if ((res = fnmatch(glob, l, FNM_EXTMATCH)) == 0) {
 		if (verbose || list) {
 			if (LSM) { 
