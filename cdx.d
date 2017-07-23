@@ -1,4 +1,5 @@
-export CDX_FILE="${HOME}/.cdx_db"
+CDX_MANUAL_FILE="${HOME}/.cdx_manual"
+export CDX_FILE="${HOME}/.cdx_db $CDX_MANUAL_FILE"
 
 function cdx ()
 {   local ndir
@@ -10,6 +11,7 @@ function cdx ()
     fi
 }
 
+# list all entries that are in the database that match the wildcard
 function cdxl ()
 {
     if [[ -n "${@}" ]]; then
@@ -17,9 +19,16 @@ function cdxl ()
     fi
 }
 
-function cdxv ()
+# more verbose list. Includes information such as file origin, distance from current dir etc.
+function cdxvll ()
 {
     if [[ -n "${@}" ]]; then
 	cdext -vp ${PWD} ${@} ${CDX_FILE} 
     fi
+}
+
+# add current directory to manual database
+function cdxa ()
+{
+    echo "${PWD}" >> $CDX_MANUAL_FILE
 }
