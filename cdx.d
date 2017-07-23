@@ -1,10 +1,10 @@
 CDX_MANUAL_FILE="${HOME}/.cdx_manual"
-export CDX_FILE="${HOME}/.cdx_db $CDX_MANUAL_FILE"
+export CDX_FILE="${HOME}/.cdx_db"
 
 function cdx ()
 {   local ndir
     if [[ -n "${@}" ]]; then
-	ndir="$(cdext -p ${PWD} ${@} ${CDX_FILE})"
+	ndir="$(cdext -ip ${PWD} ${@} ${CDX_FILE} ${CDX_MANUAL_FILE})"
 	if [ -n "${ndir}" ]; then
             cd "${ndir}" && echo "${PWD}"
 	fi

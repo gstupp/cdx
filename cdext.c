@@ -16,6 +16,7 @@
 
 char *myname;			/* for error messages */
 int verbose = 0;		/* -v option: verbose */
+int silent_ignore = 0;		/* -i option: silently ignore missing files */
 int list = 0;		/* -l option: list*/
 int LSM = 0;                    /* do Longest Suffix Match */
 int errors = 0;			/* number of errors */
@@ -60,10 +61,13 @@ int main(int argc, char **argv)
 	FILE *fp;
 
 	myname = argv[0];
-	while ((c = getopt(argc, argv, "lvp:")) != -1) {
+	while ((c = getopt(argc, argv, "ivp:")) != -1) {
 		switch (c) {
 		case 'v':
 			verbose = 1;
+			break;
+		case 'i':
+			silent_ignore = 1;
 			break;
 		case 'l':
 			list = 1;
@@ -109,9 +113,11 @@ int main(int argc, char **argv)
 				process(argv[i], fp);
 				fclose(fp);
 			} else {
-				fprintf(stderr, "%s: %s: could not open: %s\n",
-					argv[0], argv[i], strerror(errno));
-				errors++;
+				if (!silent_ignore) {
+					fprintf(stderr, "%s: %s: could not open: %s\n",
+						argv[0], argv[i], strerror(errno));
+					errors++;
+				}
 			}
 		}
 		if (!list) print_line();
