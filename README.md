@@ -49,7 +49,7 @@ real    915m12.806s
 user    3m56.711s
 sys     14m7.513s
 ```
-The `cdext` utility and `cdx` shell script help in the navigation of directory trees by focusing on a small, predefined, subset of the tree that is useful and by suppling tools such as globbing and longest prefix match to traverse it.  By itself `cdext` is just a textual utility that searches for a pattern in text files, very much like `grep`. The wrapping shell function `cdx` which is very similar to the following does the actual moving around. This is necessary because `cdext` is executed in a sub-process which cannot change the current path of the shell process.
+The `cdext` utility and `cdx` shell script help in the navigation of directory trees by focusing on a small, predefined, subset of the tree that is useful and by supplyng tools such as globbing and longest prefix match to traverse it.  By itself `cdext` is just a textual utility that searches for a pattern in text files, very much like `grep`. The wrapping shell function `cdx` which is very similar to the following does the actual moving around. This is necessary because `cdext` is executed in a sub-process which cannot change the current path of the shell process.
 
 ```
 CDX_FILE=${HOME}/.cdx_db
