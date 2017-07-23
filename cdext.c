@@ -26,7 +26,11 @@ static void save_line(const char *l, int size)
 {
 	if (size > best_match_buf_size) {
 		best_match = realloc(best_match, size);
-		// FIXME check realloc
+                if (!best_match) {
+                        fprintf(stderr, "not enough memory");
+                        exit(EXIT_FAILURE);
+                }
+
 		best_match_buf_size = size;
 	}
 	strncpy(best_match, l, size);
