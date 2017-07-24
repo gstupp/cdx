@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 	FILE *fp;
 
 	myname = argv[0];
-	while ((c = getopt(argc, argv, "ivp:")) != -1) {
+	while ((c = getopt(argc, argv, "livp:")) != -1) {
 		switch (c) {
 		case 'v':
 			verbose = 1;
@@ -273,5 +273,5 @@ void process(const char *name, FILE *fp)
 }
 void usage(void)
 {
-	fprintf(stderr, "Usage: %s [-p pivot] [-v] pattern [ files ... ]\n", myname);	
+	fprintf(stderr, "Usage: %s [-p pivot] [-liv] pattern [ files ... ]\n", myname);	
 }
