@@ -20,7 +20,7 @@ function cdxl ()
 }
 
 # more verbose list. Includes information such as file origin, distance from current dir etc.
-function cdxvll ()
+function cdxll ()
 {
     if [[ -n "${@}" ]]; then
 	cdext -vp ${PWD} ${@} ${CDX_FILE} 
