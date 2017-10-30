@@ -18,7 +18,6 @@ char *myname;			/* for error messages */
 int verbose = 0;		/* -v option: verbose */
 int silent_ignore = 0;		/* -i option: silently ignore missing files */
 int list = 0;		/* -l option: list*/
-int LSM = 0;                    /* do Longest Suffix Match */
 int errors = 0;			/* number of errors */
 
 char *glob, *pivot, *best_match;
@@ -137,19 +136,6 @@ static int lpm(const char *s1, const char *s2)
 	return count;
 }
 
-/* Length of Longest Suffix Match */
-static int lsm(const char *s1, const char *s2)
-{       int count = 0;
-	if (s1 == NULL || s2 == NULL)
-		return 0;
-
-	const char *e1 = s1 + strlen(s1);
-	const char *e2 = s2 + strlen(s2);
-	while ((e1 != s1) && (e2 != s2) && (*(e1--) == *(e2--)))
-		count++;
-	return count;
-}
-
 /* # of "/" in string */
 static int scnt(const char *s1)
 {       int count = 0;
@@ -166,10 +152,6 @@ void process_pattern(const char *s)
 {
 	size_t sl = strlen(s);
 
-        /* string terminates with "//" */
-	if (sl > 1 && s[sl - 2] == '/' && s[sl - 1] == '/') {
-		LSM = 1;
-	}
         glob = malloc(strlen(GLOB_PREFIX) + sl + strlen(GLOB_SUFFIX));
 	if (!glob) {
 		fprintf(stderr, "not enough memory");
@@ -194,21 +176,16 @@ void process_pattern(const char *s)
 
 static int process_line(const char *l, size_t size, const char *name)
 {
-	static int best_lpm = -1, best_lsm = -1, best_scnt = -1;
-	static int tmp_lpm = 0, tmp_lsm = 0, tmp_scnt = 0;
+	static int best_lpm = -1, best_scnt = -1;
+	static int tmp_lpm = 0, tmp_scnt = 0;
 	int res;
 
 	if ((res = fnmatch(glob, l, FNM_EXTMATCH)) == 0) {
 		if (verbose || list) {
-			if (LSM) { 
-				printf("%s (lpm: %3d lsm: %3d len: %3d): %s\n", name, lpm(pivot, l), lsm(pivot, l), strlen(l), l);
-			} else {
-				printf("%s (lpm: %3d len: %3d lsm: %3d): %s\n", name, lpm(pivot, l), strlen(l), lsm(pivot, l), l);
-			}
+			printf("%s (lpm: %3d len: %3d: %s\n", name, lpm(pivot, l), strlen(l), l);
 		}
 
 		tmp_lpm = lpm(pivot, l);
-		tmp_lsm = lsm(pivot, l);
 		tmp_scnt = scnt(l);
 
 		if (tmp_lpm < best_lpm)
@@ -217,29 +194,13 @@ static int process_line(const char *l, size_t size, const char *name)
 		if (tmp_lpm > best_lpm) {
 			save_line(l,size);
 			best_lpm = tmp_lpm;
-			best_lsm = tmp_lsm;
 			best_scnt = tmp_scnt;
 			return 0;
-		}
-
-		if (LSM) {
-			if(tmp_lsm < best_lsm) {
-				return 0;
-			}
-
-			if (tmp_lsm > best_lsm) {
-				save_line(l,size);
-				best_lpm = tmp_lpm;
-				best_lsm = tmp_lsm;
-				best_scnt = tmp_scnt;
-				return 0;
-			}
 		}
 
 		if(tmp_scnt < best_scnt) {
 			save_line(l,size);
 			best_lpm = tmp_lpm;
-			best_lsm = tmp_lsm;
 			best_scnt = tmp_scnt;
 		}
 	}

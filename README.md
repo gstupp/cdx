@@ -58,12 +58,12 @@ function cdx ()
      cd "$(cdext -p ${PWD} ${@} ${CDX_FILE})" && echo "${PWD}"
 }
 ```
-The `cdext` command accepts as paramters a `pivot` (typically the current directory), a  `pattern` and a list of files (typically `${CDX_FILE}`). If `pattern` contains `//` they are swapped by `*`. Then a new (extended) pattern is defined to be `*patten!(*/*)?(/)` which is compared against every line in the input. For each line that matches the new pattern the LPM (Longest prefix match) to the pivot is computed. If the patten ends with `//` the LSM (Longest Suffix Match) is computed as well. Finally the first entry that matched  `pattern`, had the best LPM to the pivot and, optionally, also the best LSM is returned.
+The `cdext` command accepts as paramters a `pivot` (typically the current directory), a  `pattern` and a list of files (typically `${CDX_FILE}`). If `pattern` contains `//` they are swapped by `*`. Then a new (extended) pattern is defined to be `*patten!(*/*)?(/)` which is compared against every line in the input. For each line that matches the new pattern the LPM (Longest prefix match) to the pivot is computed. Finally the first entry that matched  `pattern` and has the best LPM to the pivot is returned.
 
 # Notes
 1. The reason `pattern` is  changed to the extended glob `*patten!(*/*)?(/)` instead of just `*pattern*` is so that for example `cdx A` will match `/projA` but not `/projA/dev/bin` in the example above.
 1. `cdext` matches only directories that appear explicitly (have their own entry). No attmpt is made to deduce partial paths from the input.
-1. If the wildcard pattern plus the LPM (and LSM when used) score returns more than one candidate the one closest to the pivot in the directory tree is chosen.
+1. If the wildcard pattern plus the LPM score returns more than one candidate the one closest to the pivot in the directory tree is chosen.
 
 # Installation
 This repository contains the sources of `cdext` which should be compiled and placed in the `PATH`, along with a bash file (`cdx.d`) that should be sourced, typically from `~/.bashrc`. Also an example shell script (`cdx_update_example.sh`) is supplied that can be used to create and update a database of directories. 

@@ -38,7 +38,7 @@ function cdx ()
 function cdxl ()
 {
     if [[ -n "${@}" ]]; then
-	cdext -lp ${PWD} ${@} ${CDX_FILE} | sort -g -k 3 -k 5 -k 7 | cut -d':' -f5
+	cdext -lp ${PWD} ${@} ${CDX_FILE} | sort -g -k 3 -k 5 | cut -d':' -f4
     fi
 }
 
