@@ -13,7 +13,7 @@ function _cdx ()
   else
       g="${cur}"
   fi
-  res="$(cdext -ip ${PWD} $g ${CDX_FILE} ${CDX_MANUAL_FILE})"
+  res="$(cdext -itp ${PWD} $g ${CDX_FILE} ${CDX_MANUAL_FILE})"
   if [ "$res" != "$g" ] ; then 
       COMPREPLY=(${res});
   else
@@ -25,7 +25,7 @@ function _cdx ()
 function cdx ()
 {   local ndir
     if [[ -n "${@}" ]]; then
-	ndir="$(cdext -ip ${PWD} ${@} ${CDX_FILE} ${CDX_MANUAL_FILE})"
+	ndir="$(cdext -itp ${PWD} ${@} ${CDX_FILE} ${CDX_MANUAL_FILE})"
 	if [ -d "${ndir}" ]; then
             cd "${ndir}" && echo "${PWD}"
 	elif [ -d "${@}" ]; then

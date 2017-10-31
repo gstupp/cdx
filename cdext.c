@@ -16,8 +16,9 @@
 
 char *myname;			/* for error messages */
 int verbose = 0;		/* -v option: verbose */
-int silent_ignore = 0;		/* -i option: silently ignore missing files */
-int list = 0;		/* -l option: list*/
+int silent_fail = 0;		/* -i option: silently ignore missing files */
+int list = 0;		        /* -l option: list*/
+int remove_trailing_slash = 0;		/* -t option: remove trailing slashes*/
 int errors = 0;			/* number of errors */
 
 char *glob, *pivot, *best_match;
@@ -60,16 +61,19 @@ int main(int argc, char **argv)
 	FILE *fp;
 
 	myname = argv[0];
-	while ((c = getopt(argc, argv, "livp:")) != -1) {
+	while ((c = getopt(argc, argv, "tlivp:")) != -1) {
 		switch (c) {
 		case 'v':
 			verbose = 1;
 			break;
 		case 'i':
-			silent_ignore = 1;
+			silent_fail = 1;
 			break;
 		case 'l':
 			list = 1;
+			break;
+		case 't':
+			remove_trailing_slash = 1;
 			break;
 		case 'p':
 			pivot = optarg;
@@ -95,13 +99,13 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	process_pattern(argv[optind]);	/* process the pattern */
-	if (errors)			/* proccessing failed */
+	process_pattern(argv[optind]);
+	if (errors)
 		return 1;
 	else
 		optind++;
 
-	if (optind == argc)		/* no files, default to stdin */
+	if (optind == argc)
 		process("standard input", stdin);
 	else {
 		/* loop over files */
@@ -112,7 +116,7 @@ int main(int argc, char **argv)
 				process(argv[i], fp);
 				fclose(fp);
 			} else {
-				if (!silent_ignore) {
+				if (!silent_fail) {
 					fprintf(stderr, "%s: %s: could not open: %s\n",
 						argv[0], argv[i], strerror(errno));
 					errors++;
@@ -163,13 +167,17 @@ void process_pattern(const char *s)
 	strcpy(d,GLOB_PREFIX);
 	d += strlen(GLOB_PREFIX);
 	do {
-		if (*s == '/' && *(s+1) == '/') { /* change '//' to '*' */
+		if (*s == '/' && *(s+1) == '/') { /* change '//' to '*'. +1 Ok becuase of the \0 at the end */
 			*d++ = '*';
 			++s;
 		} else {
 			*d++ = *s;
 		}
 	} while (*(++s) != '\0');
+
+	if (remove_trailing_slash && *(d-1) == '/')
+		d = d - 1;
+
 	strcpy(d, GLOB_SUFFIX);
 }
 
@@ -219,7 +227,11 @@ void process(const char *name, FILE *fp)
 	int ret;
 
 	while ((len = getline(&buf, &buf_size, fp)) != -1) {
-		buf[len - 1] = '\0'; // throw away the newline at the end.
+		if (len > 0)
+			buf[len - 1] = '\0'; // throw away trailing newline.
+		if (remove_trailing_slash && len > 1 && buf[len -2] == '/') {
+			buf[len - 2] = '\0'; // thow away trailing '/'.
+		}
 		ret = process_line(buf, buf_size, name);
 		if (ret != 0) {
 			if (ret != FNM_NOMATCH) {
