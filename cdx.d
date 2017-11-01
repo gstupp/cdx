@@ -14,7 +14,7 @@ function _cdx ()
       g="${cur}"
   fi
   res="$(cdext -itp ${PWD} $g ${CDX_FILE} ${CDX_MANUAL_FILE})"
-  if [ "$res" != "$g" ] ; then 
+  if [ -n "$res" -a "$res" != "$g" ] ; then 
       COMPREPLY=(${res});
   else
       COMPREPLY=( $(compgen -d -- "$cur") )
